@@ -14,7 +14,8 @@ const products = [
   { id: 4, name: "Emerald Dragon Ring", price: 59, quantity: 0 },
   { id: 5, name: "diana jersey jumpsuit", price: 29, quantity: 0},
   { id: 6, name: "hadassah backpack blue", price: 135, quantity: 0},
-  { id: 7, name: "green onyx drop earrings", price: 69, quantity: 0}
+  { id: 7, name: "green onyx drop earrings", price: 69, quantity: 0},
+  
 ];
 
 function Cart() {

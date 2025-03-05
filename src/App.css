@@ -4,10 +4,12 @@
 
 .cart {
   margin: 40px 10px;
-  height: 250px;
-  border: 9px solid #ffd700;
+  height: 350px;
+  border: 9px solid #090352;
   position: relative;
   border-radius: 30px;
+  width: 85%;
+  margin: 20px auto;
 }
 
 .cart ul {
@@ -21,13 +23,13 @@
 
 .totalbox {
   position: absolute;
-  top: 180px;
+  top: 270px;
   left: 0;
   height: 60px;
   display: flex;
   justify-content: space-around;
   align-items: center;
-  border-top: 2px solid #ffd700;
+  border-top: 2px solid #090352;
   width: 100%;
   padding: 16px 0;
 }
@@ -69,7 +71,7 @@
 
 .buttonlist button {
   cursor: pointer;
-  border: 1px solid #ffd700;
+  border: 1px solid #090352;
   padding: 6px 9px;
   border-radius: 5px;
 }
@@ -90,8 +92,10 @@
 
 .checkoutpage {
   margin: 40px 10px;
-  border: 9px solid #ffd700;
+  border: 9px solid #090352;
   border-radius: 20px;
+  width: 85%;
+  margin: 30px auto;
 }
 .checkoutpage span {
   display: inline-block;
@@ -105,7 +109,7 @@
 }
 
 .checkoutpage button {
-  border: 1px solid #ffd700;
+  border: 1px solid #090352;
   padding: 6px 10px;
   border-radius: 10px;
   cursor: pointer;
@@ -140,7 +144,8 @@ input {
   margin: 0;
 }
 .checkoutpage ul {
-  margin: 0;
+  width: 80%;
+  margin: 30px auto;
   padding: 0;
 }
 
@@ -193,6 +198,9 @@ td {
   padding: 16px;
   border-collapse: collapse;
 }
+tbody{
+ text-transform: capitalize;
+}
 
 table,
 .checkouttotal,
@@ -212,14 +220,14 @@ table,
 
 .payment button {
   margin: 10px 0;
-  border: 1px solid #ffd700;
+  border: 1px solid #090352;
   padding: 7px 9px;
   border-radius: 5px;
   display: block;
 }
 .paymentbuttons button {
   padding: 10px;
-  border: 1px solid #ffd700;
+  border: 1px solid #090352;
   border-radius: 10px;
   cursor: pointer;
 }
@@ -256,7 +264,7 @@ form input {
 
 .paymentcontainer {
   margin: 40px 20px;
-  border: 3px solid pink;
+  border: 9px solid #090352;
   border-radius: 20px;
 }
 
@@ -308,7 +316,7 @@ form input {
   display: inline-block;
   width: 80%;
   padding: 16px 10px;
-  border: 1px solid pink;
+  border: 1px solid #090352;
   border-radius: 20px;
   background-color: lightskyblue;
   cursor: pointer;
