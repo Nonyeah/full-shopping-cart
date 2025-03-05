@@ -864,7 +864,7 @@ function Address({ item, setpayment, setconfirmpay, setcomplete, shipping }) {
               setsameaddress(true);
             }}
           >
-            click here if the same as above
+            Click here if delivery address is the same as billing address 
           </a>
         </p>
 
