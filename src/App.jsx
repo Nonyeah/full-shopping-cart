@@ -926,6 +926,7 @@ function Address({ item, setpayment, setconfirmpay, setcomplete, shipping }) {
 }
 
 function Buttons({ setItemsInCart, itemsInCart, seterror, error }) {
+
   function addItem(cartProduct) {
     let itemSelected = products.find((item) => item.id == cartProduct.id);
     let itemMultiple = itemsInCart.find((item) => item.id == itemSelected.id);
@@ -952,11 +953,18 @@ function Buttons({ setItemsInCart, itemsInCart, seterror, error }) {
   }
 
   function removeItem(cartProduct) {
+
     let itemSelected = products.find((item) => item.id == cartProduct.id);
     let itemtoBeRemoved = itemsInCart.find(
       (item) => item.id == itemSelected.id
     );
     if (!itemtoBeRemoved) return;
+
+    if(itemtoBeRemoved.quantity === 0) {
+      const keepItems = itemsInCart.filter((itemremain) => itemremain.id != itemtoBeRemoved.id);
+      setItemsInCart(keepItems);
+      return;
+    }
     let itemsToKeep = itemsInCart.filter(
       (keepitem) => keepitem.id != itemtoBeRemoved.id
     );

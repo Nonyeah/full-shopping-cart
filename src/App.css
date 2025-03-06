@@ -5,6 +5,8 @@
 .cart {
   margin: 40px 10px;
   height: 350px;
+  overflow-y:scroll;
+  scrollbar-width: none;
   border: 9px solid #090352;
   position: relative;
   border-radius: 30px;
