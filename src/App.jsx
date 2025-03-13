@@ -243,6 +243,7 @@ function DisplayItems({ singlecartitem, setitem, cartcontents }) {
       return nonmodifieditems;
     }
   }
+  
   return (
     <li className="itemsincart">
       <span>{singlecartitem.name}</span>
