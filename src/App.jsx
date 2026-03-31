@@ -1,6 +1,25 @@
 import React from "react";
 import { useState, useRef } from "react";
-import './App.css';
+import "./App.css";
+/*import Checkout from "./Checkout";
+import Shipping from "./Shipping";
+import DisplayItems from "./DisplayItems";
+import ClearCart from "./ClearCart";
+import CreditCard from "./CreditCard";
+import Payment from "./Payment";  */
+/*import {
+  Title,
+  FirstName,
+  LastName,
+  Address1,
+  Address2,
+  Town,
+  County,
+  Country,
+  Postcode,
+  Telephone,
+  Email,
+} from "./addressInputs/AddressInputs"; */
 
 export default function App() {
   return <Cart />;
@@ -12,10 +31,8 @@ const products = [
   { id: 2, name: "athena tote", price: 185, quantity: 0 },
   { id: 3, name: "Chloe Clutch", price: 49, quantity: 0 },
   { id: 4, name: "Emerald Dragon Ring", price: 59, quantity: 0 },
-  { id: 5, name: "diana jersey jumpsuit", price: 29, quantity: 0},
-  { id: 6, name: "hadassah backpack blue", price: 135, quantity: 0},
-  { id: 7, name: "green onyx drop earrings", price: 69, quantity: 0},
-  
+  { id: 5, name: "diana jersey jumpsuit", price: 29, quantity: 0 },
+  { id: 7, name: "green onyx drop earrings", price: 69, quantity: 0 },
 ];
 
 function Cart() {
@@ -27,6 +44,7 @@ function Cart() {
   const [complete, setcomplete] = useState(false);
   const [error, seterror] = useState("");
   const [confirmpay, setconfirmpay] = useState(false);
+  const [isCartEmpty, setIsCartEmpty] = useState(true);
 
   function removeItem(button) {
     let itemDelete = item.find((product) => product.id == button.id);
@@ -45,7 +63,7 @@ function Cart() {
     let itemModified = baskettotal.find((item) => item.id == iteminbasket.id);
     let original = products.find((item) => item.id == itemModified.id);
     let nonmodifieditems = baskettotal.filter(
-      (item) => item.id != itemModified.id
+      (item) => item.id != itemModified.id,
     );
     let index = baskettotal.indexOf(itemModified);
     let updatedItem = {
@@ -69,56 +87,59 @@ function Cart() {
     let total = 0;
     item.forEach((item) => (total += item.price));
     return (
-      <div className="checkoutpage">
-        <ul>
-          {item.map((basket) => (
-            <Checkout
-              key={basket.id}
-              iteminbasket={basket}
-              removeiteminbasket={removeItem}
-              baskettotal={item}
-              changeAmount={changeAmount}
-              setbaskettotal={setitem}
-            />
-          ))}
-        </ul>
+      <>
+        <h2 class="header-title">Basket Summary</h2>
+        <div className="checkoutpage">
+          <ul>
+            {item.map((basket) => (
+              <Checkout
+                key={basket.id}
+                iteminbasket={basket}
+                removeiteminbasket={removeItem}
+                baskettotal={item}
+                changeAmount={changeAmount}
+                setbaskettotal={setitem}
+              />
+            ))}
+          </ul>
 
-        <div className="continue">
-          <div className="total">
-            <p>Total: £{total + shipping}</p>
+          <div className="continue">
+            <div className="total">
+              <p>Total: £{total + shipping}</p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => {
+                setcheckout(false);
+                setpayment(false);
+                setshipping(null);
+              }}
+            >
+              continue Shopping
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                if (!shipping) {
+                  setshippingalert("Please select a shipping method ");
+                  return;
+                }
+
+                setcheckout(false);
+                setpayment(true);
+              }}
+            >
+              checkout proceed
+            </button>
           </div>
-
-          <button
-            type="button"
-            onClick={() => {
-              setcheckout(false);
-              setpayment(false);
-              setshipping(null);
-            }}
-          >
-            continue Shopping
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              if (!shipping) {
-                setshippingalert("Please select a shipping method ");
-                return;
-              }
-
-              setcheckout(false);
-              setpayment(true);
-            }}
-          >
-            checkout proceed
-          </button>
+          <Shipping
+            selectshipping={selectshipping}
+            shippingalert={shippingalert}
+            shipping={shipping}
+          />
         </div>
-        <Shipping
-          selectshipping={selectshipping}
-          shippingalert={shippingalert}
-          shipping={shipping}
-        />
-      </div>
+      </>
     );
   } else if (payment) {
     return (
@@ -149,7 +170,13 @@ function Cart() {
     item.forEach((value) => (total += value.price));
     return (
       <>
+        <h2 class="header-title">Express Cart Simulation</h2>
         <div className="cart">
+          <p class="empty-cart-message">
+            {isCartEmpty
+              ? "Your shopping cart is empty, please begin by adding items to the cart"
+              : ""}
+          </p>
           <ul>
             {item.map((displayproduct) => (
               <DisplayItems
@@ -165,7 +192,7 @@ function Cart() {
               {error}
             </p>
             <span className="total">
-              {total || total == 0 ? `£${total.toFixed(2)}` : null}
+              Total: {total || total == 0 ? `£${total.toFixed(2)}` : null}
             </span>
             <button
               type="button"
@@ -185,6 +212,7 @@ function Cart() {
         </div>
         <Buttons
           setItemsInCart={setitem}
+          setIsCartEmpty={setIsCartEmpty}
           itemsInCart={item}
           seterror={seterror}
           error={error}
@@ -195,214 +223,7 @@ function Cart() {
   }
 }
 
-function Checkout({
-  baskettotal,
-  iteminbasket,
-  setbaskettotal,
-  removeiteminbasket,
-  changeAmount,
-}) {
-  return (
-    <li key={iteminbasket.id}>
-      <span>{iteminbasket.name}</span>
-      <button onClick={() => removeiteminbasket(iteminbasket)}>delete </button>
-      <input
-        value={iteminbasket.quantity}
-        onChange={(e) => {
-          changeAmount(
-            baskettotal,
-            setbaskettotal,
-            iteminbasket,
-            e.target.value
-          );
-        }}
-        size="2"
-      />
-      <span>{`£${iteminbasket.price.toFixed(2)}`}</span>
-    </li>
-  );
-}
-
-function DisplayItems({ singlecartitem, setitem, cartcontents }) {
-  const [value, setvalue] = useState("");
-  let displayitem = products.find((item) => item.id === singlecartitem.id);
-
-  function updater(carttotal, quantity) {
-    let itemmodified = carttotal.find((elem) => elem.id == singlecartitem.id);
-    if (itemmodified) {
-      let index = carttotal.indexOf(itemmodified);
-      let nonmodifieditems = carttotal.filter(
-        (item) => item.id != itemmodified.id
-      );
-      let modifiedproduct = {
-        ...itemmodified,
-        price: displayitem.price * quantity,
-        quantity: quantity,
-      };
-      nonmodifieditems.splice(index, 0, modifiedproduct);
-      return nonmodifieditems;
-    }
-  }
-  
-  return (
-    <li className="itemsincart">
-      <span>{singlecartitem.name}</span>
-      {value
-        ? `£${singlecartitem.price.toFixed(2)} `
-        : `£${singlecartitem.price.toFixed(2)}`}
-      <input
-        size="2"
-        onChange={(e) => {
-          setvalue(e.target.value);
-          setitem(updater(cartcontents, +e.target.value));
-        }}
-        value={singlecartitem.quantity}
-      />
-    </li>
-  );
-}
-
-function Shipping({ selectshipping, shippingalert, shipping }) {
-  return (
-    <div className="shippingcontainer">
-      <span>Shipping options</span>
-      <select onChange={(e) => selectshipping(e)}>
-        <option value="">--Please choose an option--</option>
-        <option value="standard">standard shipping - £3.95</option>
-        <option value="express">express shipping - £6.95</option>
-      </select>
-      <p style={{ color: "red" }}>{shipping ? "" : shippingalert}</p>
-    </div>
-  );
-}
-
-function ClearCart({ clearcartcontents }) {
-  return (
-    <div className="clearcart">
-      <button type="button" onClick={() => clearcartcontents([])}>
-        {" "}
-        clear cart
-      </button>
-    </div>
-  );
-}
-
-function CreditCard({ setconfirmpay, setcomplete }) {
-  return (
-    <div className="paymentcontainer">
-      <div className="cardlogos">
-        <p>Payment options</p>
-        <img src="https://www.thefashionconnector.com/credit_card3.jpg" />
-      </div>
-
-      <form className="formpayment">
-        <div className="cardname">
-          <p>Name on card</p>
-          <input type="text" required />
-        </div>
-
-        <div className="cardnumber">
-          <p>Card number</p>
-          <input type="text" required />
-        </div>
-
-        <div className="cvv">
-          <div>
-            <p> Expiry Date </p>
-            <p>
-              <span>Format: MM/YY</span>
-            </p>
-            <input type="text" required />
-          </div>
-          <div>
-            <p>Security Code (CVV) </p>
-            <p>
-              <span>3 digit code</span>
-            </p>
-            <input type="text" required />
-          </div>
-        </div>
-
-        <div className="paynow">
-          <button type="submit" onClick={(e) => e.preventDefault()}>
-            Pay Now{" "}
-          </button>
-        </div>
-
-        <div className="paymentbuttons">
-          <button
-            onClick={() => {
-              setconfirmpay(false);
-              setcomplete(true);
-            }}
-          >
-            back to cart
-          </button>
-        </div>
-      </form>
-    </div>
-  );
-}
-
-function Payment({
-  cartcontents,
-  shipping,
-  setcheckout,
-  setcomplete,
-  setpayment,
-}) {
-  let total = 0;
-  cartcontents.forEach((value) => (total += value.price));
-  return (
-    <div className="checkoutitems">
-      <h3>Product Description</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Description</th>
-            <th>Quantity</th>
-            <th>Price</th>
-          </tr>
-        </thead>
-        <tbody>
-          {cartcontents.map((product) => (
-            <tr key={product.id}>
-              <td>{product.name}</td>
-              <td>{product.quantity}</td>
-              <td>{`£${product.price}`}</td>
-            </tr>
-          ))}
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colSpan="2"></td>
-            <td>{`Total: £${total.toFixed(2)}`}</td>
-          </tr>
-        </tfoot>
-      </table>
-      <div className="checkouttotal">
-        <p>Subtotal: £{total.toFixed(2)}</p>
-        <p>Shipping: £{shipping}</p>
-        <p>Total: £{total + shipping}</p>
-      </div>
-
-      <div className="paymentbuttons">
-        <button onClick={() => setcheckout(true)}>back to cart</button>{" "}
-        <button
-          type="button"
-          onClick={() => {
-            setpayment(null);
-            setcomplete(true);
-          }}
-        >
-          payment
-        </button>
-      </div>
-    </div>
-  );
-}
-
-function Title({ storeUserInput }) {
+export function Title({ storeUserInput }) {
   const [title, settitle] = useState("");
   return (
     <>
@@ -423,7 +244,7 @@ function Title({ storeUserInput }) {
   );
 }
 
-function FirstName({ storeUserInput }) {
+export function FirstName({ storeUserInput }) {
   const [firstname, setfirstname] = useState("");
   return (
     <>
@@ -444,7 +265,7 @@ function FirstName({ storeUserInput }) {
   );
 }
 
-function LastName({ storeUserInput }) {
+export function LastName({ storeUserInput }) {
   const [lastname, setlastname] = useState("");
   return (
     <>
@@ -465,7 +286,7 @@ function LastName({ storeUserInput }) {
   );
 }
 
-function Address1({ storeUserInput }) {
+export function Address1({ storeUserInput }) {
   const [address1, setaddress1] = useState("");
   return (
     <>
@@ -486,7 +307,7 @@ function Address1({ storeUserInput }) {
   );
 }
 
-function Address2({ storeUserInput }) {
+export function Address2({ storeUserInput }) {
   const [address2, setaddress2] = useState("");
   return (
     <>
@@ -506,7 +327,7 @@ function Address2({ storeUserInput }) {
   );
 }
 
-function Town({ storeUserInput }) {
+export function Town({ storeUserInput }) {
   const [town, settown] = useState("");
   return (
     <>
@@ -527,7 +348,7 @@ function Town({ storeUserInput }) {
   );
 }
 
-function County({ storeUserInput }) {
+export function County({ storeUserInput }) {
   const [county, setcounty] = useState("");
   return (
     <>
@@ -547,7 +368,7 @@ function County({ storeUserInput }) {
   );
 }
 
-function Country({ storeUserInput }) {
+export function Country({ storeUserInput }) {
   const [country, setcountry] = useState("");
   return (
     <>
@@ -568,7 +389,7 @@ function Country({ storeUserInput }) {
   );
 }
 
-function Postcode({ storeUserInput }) {
+export function Postcode({ storeUserInput }) {
   const [postcode, setpostcode] = useState("");
   return (
     <>
@@ -589,7 +410,7 @@ function Postcode({ storeUserInput }) {
   );
 }
 
-function Telephone({ storeUserInput }) {
+export function Telephone({ storeUserInput }) {
   const [telephone, settelephone] = useState("");
   return (
     <>
@@ -609,7 +430,7 @@ function Telephone({ storeUserInput }) {
   );
 }
 
-function Email({ storeUserInput }) {
+export function Email({ storeUserInput }) {
   const [email, setemail] = useState("");
   return (
     <>
@@ -820,6 +641,7 @@ function Address({ item, setpayment, setconfirmpay, setcomplete, shipping }) {
 
   return (
     <>
+      <h2 class="header-title">Delivery Details</h2>
       <table>
         <thead>
           <tr>
@@ -851,6 +673,7 @@ function Address({ item, setpayment, setconfirmpay, setcomplete, shipping }) {
         <Address2 storeUserInput={storeUserInput} />
         <Town storeUserInput={storeUserInput} />
         <County storeUserInput={storeUserInput} />
+        <Country storeUserInput={storeUserInput} />
         <Postcode storeUserInput={storeUserInput} />
         <Telephone storeUserInput={storeUserInput} />
         <Email storeUserInput={storeUserInput} />
@@ -865,7 +688,7 @@ function Address({ item, setpayment, setconfirmpay, setcomplete, shipping }) {
               setsameaddress(true);
             }}
           >
-            Click here if delivery address is the same as billing address 
+            Click here if delivery address is the same as billing address
           </a>
         </p>
 
@@ -926,17 +749,233 @@ function Address({ item, setpayment, setconfirmpay, setcomplete, shipping }) {
   );
 }
 
-function Buttons({ setItemsInCart, itemsInCart, seterror, error }) {
+export function Payment({
+  cartcontents,
+  shipping,
+  setcheckout,
+  setcomplete,
+  setpayment,
+}) {
+  let total = 0;
+  cartcontents.forEach((value) => (total += value.price));
+  return (
+    <div className="checkoutitems">
+      <h2 class="header-title">Checkout Summary</h2>
+      <h3>Product Description</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Description</th>
+            <th>Quantity</th>
+            <th>Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          {cartcontents.map((product) => (
+            <tr key={product.id}>
+              <td>{product.name}</td>
+              <td>{product.quantity}</td>
+              <td>{`£${product.price}`}</td>
+            </tr>
+          ))}
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colSpan="2"></td>
+            <td>{`Total: £${total.toFixed(2)}`}</td>
+          </tr>
+        </tfoot>
+      </table>
+      <div className="checkouttotal">
+        <p>Subtotal: £{total.toFixed(2)}</p>
+        <p>Shipping: £{shipping}</p>
+        <p>Total: £{total + shipping}</p>
+      </div>
 
-  function addItem(cartProduct) {
-    let itemSelected = products.find((item) => item.id == cartProduct.id);
-    let itemMultiple = itemsInCart.find((item) => item.id == itemSelected.id);
-    if (itemMultiple) {
-      let index = itemsInCart.indexOf(itemMultiple);
-      let nonDuplicates = itemsInCart.filter(
-        (duplicate) => duplicate.id != itemMultiple.id
+      <div className="paymentbuttons">
+        <button onClick={() => setcheckout(true)}>back to cart</button>{" "}
+        <button
+          type="button"
+          onClick={() => {
+            setpayment(null);
+            setcomplete(true);
+          }}
+        >
+          payment
+        </button>
+      </div>
+    </div>
+  );
+}
+
+export function CreditCard({ setconfirmpay, setcomplete }) {
+  return (
+    <>
+      <h2 class="header-title">Payment Page</h2>
+      <div className="paymentcontainer">
+        <div className="cardlogos">
+          <p>Payment options</p>
+          <img src="https://www.thefashionconnector.com/static/general_images/credit_card.jpg" />
+        </div>
+
+        <form className="formpayment">
+          <div className="cardname">
+            <p>Name on card</p>
+            <input type="text" required />
+          </div>
+
+          <div className="cardnumber">
+            <p>Card number</p>
+            <input type="text" required />
+          </div>
+
+          <div className="cvv">
+            <div>
+              <p> Expiry Date </p>
+              <p>
+                <span>Format: MM/YY</span>
+              </p>
+              <input type="text" required />
+            </div>
+            <div>
+              <p>Security Code (CVV) </p>
+              <p>
+                <span>3 digit code</span>
+              </p>
+              <input type="text" required />
+            </div>
+          </div>
+
+          <div className="paynow">
+            <button type="submit" onClick={(e) => e.preventDefault()}>
+              Pay Now{" "}
+            </button>
+          </div>
+
+          <div className="paymentbuttons">
+            <button
+              onClick={() => {
+                setconfirmpay(false);
+                setcomplete(true);
+              }}
+            >
+              back to cart
+            </button>
+          </div>
+        </form>
+      </div>
+    </>
+  );
+}
+
+export function ClearCart({ clearcartcontents }) {
+  return (
+    <div className="clearcart">
+      <button type="button" onClick={() => clearcartcontents([])}>
+        {" "}
+        clear cart
+      </button>
+    </div>
+  );
+}
+
+export function DisplayItems({ singlecartitem, setitem, cartcontents }) {
+  const [value, setvalue] = useState("");
+  let displayitem = products.find((item) => item.id === singlecartitem.id);
+
+  function updater(carttotal, quantity) {
+    let itemmodified = carttotal.find((elem) => elem.id == singlecartitem.id);
+    if (itemmodified) {
+      let index = carttotal.indexOf(itemmodified);
+      let nonmodifieditems = carttotal.filter(
+        (item) => item.id != itemmodified.id,
       );
       let modifiedproduct = {
+        ...itemmodified,
+        price: displayitem.price * quantity,
+        quantity: quantity,
+      };
+      nonmodifieditems.splice(index, 0, modifiedproduct);
+      return nonmodifieditems;
+    }
+  }
+
+  return (
+    <li className="itemsincart">
+      <span>{singlecartitem.name}</span>
+      {value
+        ? `£${singlecartitem.price.toFixed(2)} `
+        : `£${singlecartitem.price.toFixed(2)}`}
+      <input
+        size="2"
+        onChange={(e) => {
+          setvalue(e.target.value);
+          setitem(updater(cartcontents, +e.target.value));
+        }}
+        value={singlecartitem.quantity}
+      />
+    </li>
+  );
+}
+
+export function Checkout({
+  baskettotal,
+  iteminbasket,
+  setbaskettotal,
+  removeiteminbasket,
+  changeAmount,
+}) {
+  return (
+    <li key={iteminbasket.id}>
+      <span>{iteminbasket.name}</span>
+      <button onClick={() => removeiteminbasket(iteminbasket)}>delete </button>
+      <input
+        value={iteminbasket.quantity}
+        onChange={(e) => {
+          changeAmount(
+            baskettotal,
+            setbaskettotal,
+            iteminbasket,
+            e.target.value,
+          );
+        }}
+        size="2"
+      />
+      <span>{`£${iteminbasket.price.toFixed(2)}`}</span>
+    </li>
+  );
+}
+
+export function Shipping({ selectshipping, shippingalert, shipping }) {
+  return (
+    <div className="shippingcontainer">
+      <span>Shipping options</span>
+      <select onChange={(e) => selectshipping(e)}>
+        <option value="">--Please choose an option--</option>
+        <option value="standard">standard shipping - £3.95</option>
+        <option value="express">express shipping - £6.95</option>
+      </select>
+      <p style={{ color: "red" }}>{shipping ? "" : shippingalert}</p>
+    </div>
+  );
+}
+
+function Buttons({
+  setItemsInCart,
+  setIsCartEmpty,
+  itemsInCart,
+  seterror,
+  error,
+}) {
+  function addItem(cartProduct) {
+    const itemSelected = products.find((item) => item.id == cartProduct.id);
+    const itemMultiple = itemsInCart.find((item) => item.id == itemSelected.id);
+    if (itemMultiple) {
+      const index = itemsInCart.indexOf(itemMultiple);
+      const nonDuplicates = itemsInCart.filter(
+        (duplicate) => duplicate.id != itemMultiple.id,
+      );
+      const modifiedproduct = {
         ...itemMultiple,
         price: itemMultiple.price + cartProduct.price,
         quantity: itemMultiple.quantity + 1,
@@ -946,6 +985,7 @@ function Buttons({ setItemsInCart, itemsInCart, seterror, error }) {
 
       setItemsInCart(nonDuplicates);
     } else {
+      setIsCartEmpty(false);
       setItemsInCart([
         ...itemsInCart,
         { ...itemSelected, quantity: itemSelected.quantity + 1 },
@@ -954,27 +994,40 @@ function Buttons({ setItemsInCart, itemsInCart, seterror, error }) {
   }
 
   function removeItem(cartProduct) {
-
-    let itemSelected = products.find((item) => item.id == cartProduct.id);
-    let itemtoBeRemoved = itemsInCart.find(
-      (item) => item.id == itemSelected.id
+    const itemSelected = products.find((item) => item.id == cartProduct.id);
+    const itemtoBeRemoved = itemsInCart.find(
+      (item) => item.id == itemSelected.id,
     );
     if (!itemtoBeRemoved) return;
 
-    if(itemtoBeRemoved.quantity === 0) {
+    /*if(itemtoBeRemoved.quantity === 0) {
       const keepItems = itemsInCart.filter((itemremain) => itemremain.id != itemtoBeRemoved.id);
       setItemsInCart(keepItems);
       return;
-    }
-    let itemsToKeep = itemsInCart.filter(
-      (keepitem) => keepitem.id != itemtoBeRemoved.id
+    }*/
+
+    const itemsToKeep = itemsInCart.filter(
+      (keepitem) => keepitem.id != itemtoBeRemoved.id,
     );
 
-    if (itemtoBeRemoved && itemtoBeRemoved.price == cartProduct.price) {
+    if (
+      itemtoBeRemoved &&
+      itemtoBeRemoved.price == cartProduct.price &&
+      itemsToKeep.length
+    ) {
       setItemsInCart([...itemsToKeep]);
+      return;
+    } else if (
+      itemtoBeRemoved &&
+      itemtoBeRemoved.price == cartProduct.price &&
+      !itemsToKeep.length
+    ) {
+      setIsCartEmpty(true);
+      setItemsInCart([]);
+      return;
     } else {
-      let index = itemsInCart.indexOf(itemtoBeRemoved);
-      let itemModified = {
+      const index = itemsInCart.indexOf(itemtoBeRemoved);
+      const itemModified = {
         ...itemtoBeRemoved,
         price: itemtoBeRemoved.price - cartProduct.price,
         quantity: itemtoBeRemoved.quantity - 1,

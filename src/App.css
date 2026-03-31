@@ -2,9 +2,16 @@
   box-sizing: border-box;
 }
 
+.header-title{
+  text-align:center;
+  margin: 40px;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: 2rem;
+}
+
 .cart {
   margin: 40px 10px;
-  height: 430px;
+  height: 400px;
   overflow-y: scroll;
   scrollbar-width: none;
   border: 9px solid #090352;
@@ -12,6 +19,7 @@
   border-radius: 30px;
   width: 85%;
   margin: 20px auto;
+  padding: 20px
 }
 
 .cart ul {
@@ -21,20 +29,30 @@
 
 .cart li {
   list-style-type: none;
+  margin: 20px 0;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: 1rem;
 }
 
 .totalbox {
   position: absolute;
-  top: 330px;
+  top: 320px;
   left: 0;
-  height: 60px;
+  height: 70px;
   display: flex;
   justify-content: space-around;
   align-items: center;
-  border-top: 2px solid #090352;
+  border-top: 1px solid #090352;
   width: 100%;
   padding: 16px 0;
+ font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: 1rem;
+}
 
+.empty-cart-message{
+  text-align: center;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: 1.2rem;
 }
 
 .otherinfo {
@@ -83,15 +101,6 @@
   width: 30%;
 }
 
-.checkout {
-  padding: 8px 12px;
-  background-color: #000;
-  color: #fff;
-  border-radius: 10px;
-  cursor: pointer;
-  border: none;
-  outline: none;
-}
 
 .checkoutpage {
   margin: 40px 10px;
@@ -167,12 +176,17 @@ input {
   margin: 20px;
 }
 
-.clearcart button {
-  padding: 8px 10px;
+.clearcart button, .totalbox button {
+  padding: 10px;
   background-color: #000;
   color: #fff;
-  border-radius: 10px;
+  outline:none;
+  border:none;
   cursor: pointer;
+  font-size: 0.8rem;
+  display: inline-block;
+  width: 20%;
+  text-transform: uppercase;
 }
 
 .shippingcontainer {
@@ -326,6 +340,26 @@ form input {
 }
 
 @media only screen and (max-width: 600px) {
+
+  
+.cart {
+ 
+  height: 490px;
+ 
+}
+
+.totalbox {
+  position: absolute;
+  top: 390px;
+  left: 0;
+  height: 70px;
+  font-size: 0.8rem;
+}
+
+  .totalbox button, .clearcart button{
+    font-size: 0.8rem;
+    width: 35%
+  }
   .checkoutpage button,
   .checkoutpage span,
   .checkoutpage input {
