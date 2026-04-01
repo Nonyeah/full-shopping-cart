@@ -249,6 +249,13 @@ table,
   cursor: pointer;
 }
 
+.billing,
+.delivery {
+  font-weight: bold;
+  text-transform: capitalize;
+  font-size: 1.2rem;
+}
+
 form {
   width: 70%;
   margin: 40px auto;

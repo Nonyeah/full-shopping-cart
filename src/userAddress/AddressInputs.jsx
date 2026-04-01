@@ -25,7 +25,7 @@ export function FirstName({ storeUserInput }) {
   return (
     <>
       <p>
-        <span>First Name*</span>{" "}
+        <span>First Name*</span>
         <input
           type="text"
           id="firstname"
