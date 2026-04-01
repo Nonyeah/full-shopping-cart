@@ -1,4 +1,4 @@
-export default function CreditCard({ setconfirmpay, setcomplete }) {
+export default function CreditCard({ setconfirmpay, setdelivery }) {
   return (
     <>
       <h2 class="header-title">Payment Page</h2>
@@ -46,7 +46,7 @@ export default function CreditCard({ setconfirmpay, setcomplete }) {
             <button
               onClick={() => {
                 setconfirmpay(false);
-                setcomplete(true);
+                setdelivery(true);
               }}
             >
               back to cart

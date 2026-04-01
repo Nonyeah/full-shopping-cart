@@ -23,11 +23,11 @@ export const products = [
 
 function Cart() {
   const [item, setitem] = useState([]);
-  const [checkout, setcheckout] = useState(false);
+  const [basket, setbasket] = useState(false);
   const [shipping, setshipping] = useState(null);
-  const [payment, setpayment] = useState(null);
+  const [checkoutsummary, setcheckoutsummary] = useState(null);
   const [shippingalert, setshippingalert] = useState("");
-  const [complete, setcomplete] = useState(false);
+  const [delivery, setdelivery] = useState(false);
   const [error, seterror] = useState("");
   const [confirmpay, setconfirmpay] = useState(false);
   const [isCartEmpty, setIsCartEmpty] = useState(true);
@@ -37,11 +37,11 @@ function Cart() {
     let basket = item.filter((product) => product.id != itemDelete.id);
     if (!basket.length) {
       setitem(basket);
-      setcheckout(false);
+      setbasket(false);
       setshipping(null);
     } else {
       setitem(basket);
-      setcheckout(true);
+      setbasket(true);
     }
   }
 
@@ -69,7 +69,7 @@ function Cart() {
     }
   }
 
-  if (checkout) {
+  if (basket) {
     let total = 0;
     item.forEach((item) => (total += item.price));
     return (
@@ -97,8 +97,8 @@ function Cart() {
             <button
               type="button"
               onClick={() => {
-                setcheckout(false);
-                setpayment(false);
+                setbasket(false);
+                setcheckoutsummary(false);
                 setshipping(null);
               }}
             >
@@ -112,8 +112,8 @@ function Cart() {
                   return;
                 }
 
-                setcheckout(false);
-                setpayment(true);
+                setbasket(false);
+                setcheckoutsummary(true);
               }}
             >
               checkout proceed
@@ -127,29 +127,29 @@ function Cart() {
         </div>
       </>
     );
-  } else if (payment) {
+  } else if (checkoutsummary) {
     return (
       <Payment
         cartcontents={item}
         shipping={shipping}
-        setcheckout={setcheckout}
-        setcomplete={setcomplete}
-        setpayment={setpayment}
+        setbasket={setbasket}
+        setdelivery={setdelivery}
+        setcheckoutsummary={setcheckoutsummary}
       />
     );
-  } else if (complete) {
+  } else if (delivery) {
     return (
       <Address
         item={item}
         setconfirmpay={setconfirmpay}
-        setcomplete={setcomplete}
+        setdelivery={setdelivery}
         shipping={shipping}
-        setpayment={setpayment}
+        setcheckoutsummary={setcheckoutsummary}
       />
     );
   } else if (confirmpay) {
     return (
-      <CreditCard setcomplete={setcomplete} setconfirmpay={setconfirmpay} />
+      <CreditCard setdelivery={setdelivery} setconfirmpay={setconfirmpay} />
     );
   } else {
     let total = null;
@@ -189,7 +189,7 @@ function Cart() {
                   return;
                 }
                 if (total == 0) return;
-                setcheckout(true);
+                setbasket(true);
               }}
             >
               checkout

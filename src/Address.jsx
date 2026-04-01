@@ -31,9 +31,9 @@ import PaymentButtons from "./PaymentButtons";
 
 export default function Address({
   item,
-  setpayment,
+  setcheckoutsummary,
   setconfirmpay,
-  setcomplete,
+  setdelivery,
   shipping,
 }) {
   let total = 0;
@@ -112,8 +112,8 @@ export default function Address({
         <div className="paymentbuttons">
           <button
             onClick={() => {
-              setpayment(true);
-              setcomplete(false);
+              setcheckoutsummary(true);
+              setdelivery(false);
             }}
           >
             back to cart
@@ -136,15 +136,15 @@ export default function Address({
             <OtherInfo />
             <PaymentButtons
               paybycreditcard={setconfirmpay}
-              setcomplete={setcomplete}
-              setpayment={setpayment}
+              setdelivery={setdelivery}
+              setcheckoutsummary={setcheckoutsummary}
             />
 
             <div className="paymentbuttons">
               <button
                 onClick={() => {
-                  setpayment(true);
-                  setcomplete(false);
+                  setcheckoutsummary(true);
+                  setdelivery(false);
                 }}
               >
                 back to cart
@@ -152,7 +152,7 @@ export default function Address({
               <button
                 type="button"
                 onClick={() => {
-                  setcomplete(false);
+                  setdelivery(false);
                   setconfirmpay(true);
                 }}
               >

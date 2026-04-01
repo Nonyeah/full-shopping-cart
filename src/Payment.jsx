@@ -1,9 +1,9 @@
 export default function Payment({
   cartcontents,
   shipping,
-  setcheckout,
-  setcomplete,
-  setpayment,
+  setbasket,
+  setdelivery,
+  setcheckoutsummary,
 }) {
   let total = 0;
   cartcontents.forEach((value) => (total += value.price));
@@ -42,12 +42,12 @@ export default function Payment({
       </div>
 
       <div className="paymentbuttons">
-        <button onClick={() => setcheckout(true)}>back to cart</button>{" "}
+        <button onClick={() => setbasket(true)}>back to cart</button>{" "}
         <button
           type="button"
           onClick={() => {
-            setpayment(null);
-            setcomplete(true);
+            setcheckoutsummary(null);
+            setdelivery(true);
           }}
         >
           payment
