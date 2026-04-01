@@ -41,6 +41,8 @@ export default function Address({
   const [sameaddress, setsameaddress] = useState(false);
   const ref = useRef(null);
 
+  let display = sameaddress ? "none" : "block";
+
   function storeUserInput(e) {
     if (!ref.current) {
       ref.current = new Map();
@@ -109,7 +111,7 @@ export default function Address({
           </a>
         </p>
 
-        <div className="paymentbuttons">
+        <div className="paymentbuttons" style={{ display: display }}>
           <button
             onClick={() => {
               setcheckoutsummary(true);
@@ -134,11 +136,6 @@ export default function Address({
             <TelephoneSame map={ref} />
             <EmailSame map={ref} />
             <OtherInfo />
-            <PaymentButtons
-              paybycreditcard={setconfirmpay}
-              setdelivery={setdelivery}
-              setcheckoutsummary={setcheckoutsummary}
-            />
 
             <div className="paymentbuttons">
               <button
