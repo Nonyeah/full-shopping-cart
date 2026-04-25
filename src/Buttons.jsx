@@ -40,11 +40,6 @@ export default function Buttons({
     );
     if (!itemtoBeRemoved) return;
 
-    /*if(itemtoBeRemoved.quantity === 0) {
-      const keepItems = itemsInCart.filter((itemremain) => itemremain.id != itemtoBeRemoved.id);
-      setItemsInCart(keepItems);
-      return;
-    }*/
 
     const itemsToKeep = itemsInCart.filter(
       (keepitem) => keepitem.id != itemtoBeRemoved.id,
@@ -81,7 +76,7 @@ export default function Buttons({
     <li key={bag.id}>
       <span>{bag.name}</span>
       <button
-        tye="button"
+        type="button"
         onClick={() => {
           if (error) seterror("");
           addItem(bag);

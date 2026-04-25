@@ -46,7 +46,7 @@ export default function Payment({
         <button
           type="button"
           onClick={() => {
-            setcheckoutsummary(null);
+            setcheckoutsummary(false);
             setdelivery(true);
           }}
         >

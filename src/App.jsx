@@ -39,6 +39,7 @@ function Cart() {
       setitem(basket);
       setbasket(false);
       setshipping(null);
+      setcheckoutsummary(false)
     } else {
       setitem(basket);
       setbasket(true);
@@ -152,7 +153,7 @@ function Cart() {
       <CreditCard setdelivery={setdelivery} setconfirmpay={setconfirmpay} />
     );
   } else {
-    let total = null;
+    let total = 0;
     item.forEach((value) => (total += value.price));
     return (
       <>
@@ -203,7 +204,7 @@ function Cart() {
           seterror={seterror}
           error={error}
         />
-        <ClearCart clearcartcontents={setitem} />
+        <ClearCart clearcartcontents={setitem} setIsCartEmpty={setIsCartEmpty} />
       </>
     );
   }
